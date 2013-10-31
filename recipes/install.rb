@@ -21,7 +21,11 @@
 include_recipe 'iptables-ng::manage'
 
 # Make sure iptables is installed
-Array(node['iptables-ng']['packages']).each { |pkg| package pkg }
+Array(node['iptables-ng']['packages']).each do |pkg|
+  package pkg do
+    options '--force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew"'
+  end
+end
 
 # Make sure ufw is not installed on Ubuntu/Debian, as it might interfere
 package 'ufw' do
